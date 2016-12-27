@@ -1,0 +1,162 @@
+# A user address
+type Address implements Node {
+  # The ID of an object
+  id: ID!
+
+  # Street Address 1
+  address_1: String
+
+  # Street Address 2
+  address_2: String
+
+  # City
+  city: String
+
+  # Postal Code
+  postal_code: String
+}
+
+# A connection to a list of items.
+type AddressConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [AddressEdge]
+}
+
+# An edge in a connection.
+type AddressEdge {
+  # The item at the end of the edge
+  node: Address
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# A user hobbies
+type Hobbies implements Node {
+  # The ID of an object
+  id: ID!
+
+  # Hobby Type
+  title: String
+}
+
+# A connection to a list of items.
+type HobbyConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [HobbyEdge]
+}
+
+# An edge in a connection.
+type HobbyEdge {
+  # The item at the end of the edge
+  node: Hobbies
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+input InsertAddressInput {
+  address_1: String!
+  address_2: String!
+  city: String!
+  postal_code: String!
+  clientMutationId: String
+}
+
+type InsertAddressPayload {
+  address: Address
+  clientMutationId: String
+}
+
+input InsertHobbyInput {
+  title: String!
+  clientMutationId: String
+}
+
+type InsertHobbyPayload {
+  hobby: Hobbies
+  clientMutationId: String
+}
+
+type Mutation {
+  insertAddress(input: InsertAddressInput!): InsertAddressPayload
+  insertHobby(input: InsertHobbyInput!): InsertHobbyPayload
+}
+
+# An object with an ID
+interface Node {
+  # The id of the object.
+  id: ID!
+}
+
+# Information about pagination in a connection.
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
+}
+
+type Query {
+  # Fetches an object given its ID
+  node(
+    # The ID of an object
+    id: ID!
+  ): Node
+  viewer: User
+}
+
+# A person who uses our app
+type User implements Node {
+  # The ID of an object
+  id: ID!
+
+  # A person's collection of widgets
+  widgets(after: String, first: Int, before: String, last: Int): WidgetConnection
+
+  # A person's addresses
+  addresses(after: String, first: Int, before: String, last: Int): AddressConnection
+
+  # A person's hobbies
+  hobbies(status: String = "any", after: String, first: Int, before: String, last: Int): HobbyConnection
+}
+
+# A shiny widget
+type Widget implements Node {
+  # The ID of an object
+  id: ID!
+
+  # The name of the widget
+  name: String
+}
+
+# A connection to a list of items.
+type WidgetConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [WidgetEdge]
+}
+
+# An edge in a connection.
+type WidgetEdge {
+  # The item at the end of the edge
+  node: Widget
+
+  # A cursor for use in pagination
+  cursor: String!
+}
