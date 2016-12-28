@@ -76,16 +76,60 @@ var {nodeInterface, nodeField} = nodeDefinitions(
 /**
  * Define your own types here
  */
+ const formDummy = {
+       form: ["*"],
+       schema: {
+                  "type": "object",
+                  "title": "Types",
+                  "properties": {
+                    "string": {
+                      "type": "string",
+                      "minLength": 3
+                    },
+                    "anotherstring": {
+                      "type": "string",
+                      "minLength": 3
+                    },
+                    "integer": {
+                      "type": "integer"
+                    },
+                    "number": {
+                      "type": "number"
+                    },
+                    "boolean": {
+                      "type": "boolean"
+                    },
+                    "radios": {
+                      "title": "Basic radio button example",
+                      "type": "string",
+                      "enum": [
+                        "a",
+                        "b",
+                        "c"
+                      ]
+                    },
+                    "comment": {
+                      "title": "Comment",
+                      "type": "string",
+                      "maxLength": 20,
+                      "validationMessage": "Don't be greedy!",
+                      "description": "Please write your comment here."
+                    }
+                  },
+                  "required": [
+                    "number"
+                  ]
+                },
+       model: {}
+   }
  var Bucket = {
      collections: [
-       { id:"1", title:"Cricket" },
-       { id:"2", title: "Reading" },
-       { id:"3", title: "Traveling" }
-     ],
-     records: [
-       { title:"Cricket" },
-       { title: "Reading" },
-       { title: "Traveling" }
+       { id:"1",
+         title:"Form1",
+         form: JSON.stringify(formDummy.form),
+         fschema: JSON.stringify(formDummy.schema),
+         model: JSON.stringify(formDummy.model)
+        },
      ]
  }
 /**
@@ -112,7 +156,19 @@ var collectionType = new GraphQLObjectType({
     id: globalIdField('Widget'),
     title: {
       type: GraphQLString,
-      description: 'Collection Type',
+      description: 'Collection - Form Title',
+    },
+    form: {
+      type: GraphQLString,
+      description: 'Collection - Form',
+    },
+    fschema: {
+      type: GraphQLString,
+      description: 'Collection - Form Schema',
+    },
+    model: {
+      type: GraphQLString,
+      description: 'Collection - Form Model',
     },
   }),
   interfaces: [nodeInterface],

@@ -30,8 +30,17 @@ type Collections implements Node {
   # The ID of an object
   id: ID!
 
-  # Collection Type
+  # Collection - Form Title
   title: String
+
+  # Collection - Form
+  form: String
+
+  # Collection - Form Schema
+  fschema: String
+
+  # Collection - Form Model
+  model: String
 }
 
 input InsertCollectionInput {

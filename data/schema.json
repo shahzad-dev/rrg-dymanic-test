@@ -417,7 +417,43 @@
             },
             {
               "name": "title",
-              "description": "Collection Type",
+              "description": "Collection - Form Title",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "form",
+              "description": "Collection - Form",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "fschema",
+              "description": "Collection - Form Schema",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "model",
+              "description": "Collection - Form Model",
               "args": [],
               "type": {
                 "kind": "SCALAR",

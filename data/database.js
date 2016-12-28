@@ -10,11 +10,26 @@
 // Model types
 class User {}
 class Widget {}
+const formDummy = {
+      form: ["*"],
+      schema: {
+              "type": "object",
+              "title": "Types",
+              "properties": {
+                "string": {
+                  "type": "string",
+                  "minLength": 3
+                },
+              },
+            },
+      model: {}
+  }
 var Bucket = {
     collections: [
-      { id:"1", title:"Cricket" },
-      { id:"2", title: "Reading" },
-      { id:"3", title: "Traveling" }
+      { id:"1",
+        title:"Form1",
+        form: JSON.stringify(formDummy.form),
+        schema: JSON.stringify(formDummy.schema) }
     ],
     records: [
       { title:"Cricket" },
