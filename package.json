@@ -1,7 +1,7 @@
 {
   "name": "rrg-schema-test",
   "private": true,
-  "description": "A quick way to test rrg.",
+  "description": "A quick way to test rrg schema.",
   "repository": "shahzad-dev/rrg-schema-test",
   "version": "0.0.1",
   "scripts": {
