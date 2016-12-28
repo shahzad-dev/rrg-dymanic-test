@@ -10,6 +10,18 @@
 // Model types
 class User {}
 class Widget {}
+var Bucket = {
+    collections: [
+      { id:"1", title:"Cricket" },
+      { id:"2", title: "Reading" },
+      { id:"3", title: "Traveling" }
+    ],
+    records: [
+      { title:"Cricket" },
+      { title: "Reading" },
+      { title: "Traveling" }
+    ]
+}
 
 // Mock data
 var viewer = new User();
@@ -28,6 +40,9 @@ module.exports = {
   getViewer: () => viewer,
   getWidget: (id) => widgets.find(w => w.id === id),
   getWidgets: () => widgets,
+  getCollections: () => { return Bucket.collections },
+  getRecords: () => ( Bucket.records ),
   User,
   Widget,
+  Bucket
 };

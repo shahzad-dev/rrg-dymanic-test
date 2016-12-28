@@ -37,6 +37,8 @@ import {
   getViewer,
   getWidget,
   getWidgets,
+  getCollections,
+  getRecords
 } from './database';
 
 /**
@@ -61,8 +63,10 @@ var {nodeInterface, nodeField} = nodeDefinitions(
       return userType;
     } else if (obj instanceof Widget)  {
       return widgetType;
-    } else if (obj instanceof Hobby)  {
-      return hobbyType;
+    } else if (obj instanceof Collection)  {
+      return collectionType;
+    } else if (obj instanceof Bucket)  {
+      return collectionType;
     } else {
       return null;
     }
@@ -72,14 +76,18 @@ var {nodeInterface, nodeField} = nodeDefinitions(
 /**
  * Define your own types here
  */
-var faction = {
-    hobbies: [
-      { title:"Cricket" },
-      { title: "Reading" },
-      { title: "Traveling" }
-    ]
-}
-
+ var Bucket = {
+     collections: [
+       { id:"1", title:"Cricket" },
+       { id:"2", title: "Reading" },
+       { id:"3", title: "Traveling" }
+     ],
+     records: [
+       { title:"Cricket" },
+       { title: "Reading" },
+       { title: "Traveling" }
+     ]
+ }
 /**
 *  Types
 */
@@ -97,14 +105,14 @@ var widgetType = new GraphQLObjectType({
   interfaces: [nodeInterface],
 });
 
-var hobbyType = new GraphQLObjectType({
-  name: 'Hobbies',
-  description: 'A user hobbies',
+var collectionType = new GraphQLObjectType({
+  name: 'Collections',
+  description: 'A user collections',
   fields: () => ({
     id: globalIdField('Widget'),
     title: {
       type: GraphQLString,
-      description: 'Hobby Type',
+      description: 'Collection Type',
     },
   }),
   interfaces: [nodeInterface],
@@ -118,8 +126,8 @@ var hobbyType = new GraphQLObjectType({
 var {connectionType: widgetConnection} =
   connectionDefinitions({name: 'Widget', nodeType: widgetType});
 
-var {connectionType: hobbyConnection} =
-  connectionDefinitions({name: 'Hobby', nodeType: hobbyType});
+var {connectionType: collectionConnection} =
+  connectionDefinitions({name: 'Collection', nodeType: collectionType});
 
 
 var userType = new GraphQLObjectType({
@@ -132,10 +140,10 @@ var userType = new GraphQLObjectType({
       description: 'A person\'s collection of widgets',
       args: connectionArgs,
       resolve: (_, args) => connectionFromArray(getWidgets(), args),
-    }
-    hobbies: {
-        type: hobbyConnection,
-        description: 'A person\'s hobbies',
+    },
+    collections: {
+        type: collectionConnection,
+        description: 'A person\'s collections',
         args: {
           status: {
             type: GraphQLString,
@@ -150,7 +158,7 @@ var userType = new GraphQLObjectType({
           ) => {
               //console.log( "Root", obj, "Status", status, "Args", args, "Context", context);
               return connectionFromArray(
-                  faction.hobbies.map((hobby) => hobby),
+                  Bucket.collections.map((collection) => collection),
                   args
               )
             },
@@ -159,7 +167,23 @@ var userType = new GraphQLObjectType({
   interfaces: [nodeInterface],
 });
 
+var bucketType = new GraphQLObjectType({
+  name: 'Bucket',
+  description: 'A person who uses our app',
+  fields: () => ({
+      id: globalIdField('User'),
+      collections: {
+        type: collectionConnection,
+        description: 'A bucket\'s collections',
+        args: connectionArgs,
+        resolve: (_, args) => connectionFromArray(Bucket.collections, args),
+      },
+  }),
+  interfaces: [nodeInterface],
+});
 
+
+let getAllCollections = () => { return Bucket.collections };
 /**
  * This is the type that will be the root of our query,
  * and the entry point into our schema.
@@ -169,6 +193,10 @@ var queryType = new GraphQLObjectType({
   fields: () => ({
     node: nodeField,
     // Add your own root fields here
+    bucket: {
+      type: bucketType,
+      resolve: () => getViewer(),
+    },
     viewer: {
       type: userType,
       resolve: () => getViewer(),
@@ -176,32 +204,32 @@ var queryType = new GraphQLObjectType({
   }),
 });
 
-function addHobby(values){
-    var hobbyId = faction.hobbies.push(values)  - 1;
-    return { hobbyId };
+function addCollection(values){
+    var collectionId = Bucket.collections.push(values)  - 1;
+    return { collectionId };
 }
-const hobbyAddMutation = mutationWithClientMutationId({
-  name: 'InsertHobby',
+const collectionAddMutation = mutationWithClientMutationId({
+  name: 'InsertCollection',
   inputFields: {
     title: {
       type: new GraphQLNonNull(GraphQLString)
     },
   },
   outputFields: {
-    hobby: {
-      type: hobbyType,
-      resolve: payload => faction.hobbies[payload.hobbyId],
+    collection: {
+      type: collectionType,
+      resolve: payload => Bucket.collections[payload.collectionId],
     }
   },
   mutateAndGetPayload: (args) => {
-    return addHobby(args);
+    return addCollection(args);
   }
 });
 
 var mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
-    insertHobby: hobbyAddMutation,
+    insertCollection: collectionAddMutation,
   })
 });
 

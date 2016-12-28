@@ -1,92 +1,51 @@
-# A user address
-type Address implements Node {
+# A person who uses our app
+type Bucket implements Node {
   # The ID of an object
   id: ID!
 
-  # Street Address 1
-  address_1: String
-
-  # Street Address 2
-  address_2: String
-
-  # City
-  city: String
-
-  # Postal Code
-  postal_code: String
+  # A bucket's collections
+  collections(after: String, first: Int, before: String, last: Int): CollectionConnection
 }
 
 # A connection to a list of items.
-type AddressConnection {
+type CollectionConnection {
   # Information to aid in pagination.
   pageInfo: PageInfo!
 
   # A list of edges.
-  edges: [AddressEdge]
+  edges: [CollectionEdge]
 }
 
 # An edge in a connection.
-type AddressEdge {
+type CollectionEdge {
   # The item at the end of the edge
-  node: Address
+  node: Collections
 
   # A cursor for use in pagination
   cursor: String!
 }
 
-# A user hobbies
-type Hobbies implements Node {
+# A user collections
+type Collections implements Node {
   # The ID of an object
   id: ID!
 
-  # Hobby Type
+  # Collection Type
   title: String
 }
 
-# A connection to a list of items.
-type HobbyConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-
-  # A list of edges.
-  edges: [HobbyEdge]
-}
-
-# An edge in a connection.
-type HobbyEdge {
-  # The item at the end of the edge
-  node: Hobbies
-
-  # A cursor for use in pagination
-  cursor: String!
-}
-
-input InsertAddressInput {
-  address_1: String!
-  address_2: String!
-  city: String!
-  postal_code: String!
-  clientMutationId: String
-}
-
-type InsertAddressPayload {
-  address: Address
-  clientMutationId: String
-}
-
-input InsertHobbyInput {
+input InsertCollectionInput {
   title: String!
   clientMutationId: String
 }
 
-type InsertHobbyPayload {
-  hobby: Hobbies
+type InsertCollectionPayload {
+  collection: Collections
   clientMutationId: String
 }
 
 type Mutation {
-  insertAddress(input: InsertAddressInput!): InsertAddressPayload
-  insertHobby(input: InsertHobbyInput!): InsertHobbyPayload
+  insertCollection(input: InsertCollectionInput!): InsertCollectionPayload
 }
 
 # An object with an ID
@@ -116,6 +75,7 @@ type Query {
     # The ID of an object
     id: ID!
   ): Node
+  bucket: Bucket
   viewer: User
 }
 
@@ -127,11 +87,8 @@ type User implements Node {
   # A person's collection of widgets
   widgets(after: String, first: Int, before: String, last: Int): WidgetConnection
 
-  # A person's addresses
-  addresses(after: String, first: Int, before: String, last: Int): AddressConnection
-
-  # A person's hobbies
-  hobbies(status: String = "any", after: String, first: Int, before: String, last: Int): HobbyConnection
+  # A person's collections
+  collections(status: String = "any", after: String, first: Int, before: String, last: Int): CollectionConnection
 }
 
 # A shiny widget
